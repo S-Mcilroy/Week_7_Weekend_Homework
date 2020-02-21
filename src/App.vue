@@ -1,28 +1,59 @@
-<template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+<template lang="html">
+  <div>
+    <h1>PoKéMoN</h1>
+
+    <div>
+      <p>First Pokemon:</p>
+      <pokemon-filter :pokemons="pokemons" :pokemonsDetails="pokemonsDetails"/>
+    </div>
+
+    <div>
+      <p>Second Pokemon:</p>
+      <pokemon-compare :pokemons="pokemons" :pokemonsDetails="pokemonsDetails"/>
+    </div>
+
+    <pokemon-detail/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import PokemonFilter from './components/PokemonFilter.vue'
+import PokemonDetail from './components/PokemonDetail.vue'
+import PokemonCompare from './components/PokemonCompare.vue'
 
 export default {
-  name: 'App',
+  name: "app",
+  data(){
+    return{
+      pokemons: [],
+      pokemonsDetails: []
+    }
+  },
+  methods: {
+    getAllPokemonDetails(){
+      for (const pokemon of this.pokemons){
+        fetch(pokemon.url)
+        .then(res => res.json())
+        .then(data => this.pokemonsDetails.push(data))}
+      }
+    },
+
+    mounted() {
+      fetch('https://pokeapi.co/api/v2/pokemon?limit=100&offset=151')
+      .then(res => res.json())
+      .then(data => {this.pokemons = data['results']
+      this.getAllPokemonDetails();}
+    )
+  },
   components: {
-    HelloWorld
+    "pokemon-filter": PokemonFilter,
+    "pokemon-detail": PokemonDetail,
+    "pokemon-compare": PokemonCompare
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
+<style lang="css" scoped>
+
 </style>
