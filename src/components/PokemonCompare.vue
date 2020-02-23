@@ -1,7 +1,7 @@
 <template lang="html">
     <select v-on:change="handleSelect" v-model="selectedPokemon">
       <option disabled value="">Select a pokemon...</option>
-      <option v-for="pokemon in pokemons" :value="pokemon">{{pokemon.name}}</option>
+      <option v-for="pokemon in pokemonsDetails" :value="pokemon">{{pokemon.name}}</option>
     </select>
 </template>
 
@@ -16,11 +16,10 @@ export default {
       "detail": {},
     }
   },
-  props: ["pokemons", "pokemonsDetails"],
+  props: ["pokemonsDetails"],
   methods: {
     handleSelect(){
       this.detail = this.pokemonsDetails.filter(detail => detail.name === this.selectedPokemon.name)[0]
-      eventBus.$emit('pokemon-compare', this.selectedPokemon);
       eventBus.$emit('pokemon-compare-details', this.detail)
     }
   }
